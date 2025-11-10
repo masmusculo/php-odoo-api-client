@@ -72,6 +72,17 @@ class Client
     }
 
     /**
+     * List available databases on the server.
+     * This method doesn't require authentication.
+     * 
+     * @throws TransportException on transport errors
+     */
+    public function listDatabases(): array
+    {
+        return (array) $this->request(OdooRpcService::Database->value, OdooRpcMethod::List->value);
+    }
+
+    /**
      * @throws AuthenticationException when authentication failed
      */
     public function authenticate(): int

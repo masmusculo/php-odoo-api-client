@@ -16,4 +16,5 @@ enum OdooRpcMethod: string
     case Login = 'login';
     case ExecuteKw = 'execute_kw';
     case Version = 'version';
+    case List = 'list';
 }

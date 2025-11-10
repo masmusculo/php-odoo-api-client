@@ -15,4 +15,5 @@ enum OdooRpcService: string
 {
     case Common = 'common';
     case Object = 'object';
+    case Database = 'db';
 }
