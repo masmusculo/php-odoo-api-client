@@ -30,6 +30,11 @@ class Client
     private TransportInterface $transport;
     private ?int $uid = null;
 
+    private static $domainRequiredMethods = [
+        'search',
+        'search_count',
+    ];
+
     public function __construct(
         private readonly Connection $connection,
         TransportInterface $transport = null,
@@ -67,6 +72,10 @@ class Client
 
     public function executeKw(string $name, string $method, array $parameters = [], array $options = []): mixed
     {
+        if (in_array($method, self::$domainRequiredMethods, true) && empty($parameters)) {
+            $parameters = [[]];
+        }
+
         return $this->request(
             OdooRpcService::Object->value,
             OdooRpcMethod::ExecuteKw->value,
