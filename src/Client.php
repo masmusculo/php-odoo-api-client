@@ -51,6 +51,20 @@ class Client
         return new self(Connection::parseDsn($dsn), $transport, $logger);
     }
 
+    /**
+     * Create a new client instance from array configuration.
+     * The configuration array must have keys "host", "database", "username", "password" and "scheme".
+     *
+     * @static
+     *
+     * @throws MissingConfigParameterException when a required parameter is missing
+     */
+    public static function createFromConfig(array $config, TransportInterface $transport = null, LoggerInterface $logger = null): self
+    {
+        return new self(Connection::create($config), $transport, $logger);
+    }
+
+
     public function executeKw(string $name, string $method, array $parameters = [], array $options = []): mixed
     {
         return $this->request(
