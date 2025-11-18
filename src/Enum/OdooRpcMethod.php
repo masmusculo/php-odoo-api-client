@@ -11,10 +11,18 @@ declare(strict_types=1);
 
 namespace Ang3\Component\Odoo\Enum;
 
-enum OdooRpcMethod: string
+/**
+ * @author Joanis ROUANET <https://github.com/Ang3>
+ */
+final class OdooRpcMethod
 {
-    case Login = 'login';
-    case ExecuteKw = 'execute_kw';
-    case Version = 'version';
-    case List = 'list';
+    public const LOGIN = 'login';
+    public const EXECUTE_KW = 'execute_kw';
+    public const VERSION = 'version';
+    public const LIST = 'list';
+
+    private function __construct()
+    {
+        // Prevent instantiation
+    }
 }

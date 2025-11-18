@@ -98,9 +98,9 @@ final class ClientTest extends TestCase
     public static function provideRequestData(): array
     {
         return [
-            [OdooRpcService::Common, OdooRpcMethod::Login],
-            [OdooRpcService::Common, OdooRpcMethod::Version],
-            [OdooRpcService::Object, OdooRpcMethod::ExecuteKw],
+            [OdooRpcService::COMMON, OdooRpcMethod::LOGIN],
+            [OdooRpcService::COMMON, OdooRpcMethod::VERSION],
+            [OdooRpcService::OBJECT, OdooRpcMethod::EXECUTE_KW],
         ];
     }
 
@@ -109,16 +109,16 @@ final class ClientTest extends TestCase
      *
      * @dataProvider provideRequestData
      */
-    public function testRequest(OdooRpcService $service, OdooRpcMethod $method): void
+    public function testRequest($service, $method): void
     {
         $this->transport
             ->expects(static::once())
             ->method('request')
-            ->with($service->value, $method->value, [1, 2, 3])
+            ->with($service, $method, [1, 2, 3])
             ->willReturn('foo')
         ;
 
-        $result = $this->client->request($service->value, $method->value, 1, 2, 3);
+        $result = $this->client->request($service, $method, 1, 2, 3);
         static::assertSame('foo', $result);
     }
 
@@ -127,13 +127,13 @@ final class ClientTest extends TestCase
      *
      * @dataProvider provideRequestData
      */
-    public function testRequestRemoteError(OdooRpcService $service, OdooRpcMethod $method): void
+    public function testRequestRemoteError($service, $method): void
     {
         self::expectException(RemoteException::class);
         $this->transport
             ->expects(static::once())
             ->method('request')
-            ->with($service->value, $method->value, [1, 2, 3])
+            ->with($service, $method, [1, 2, 3])
             ->willThrowException(RemoteException::create([
                 'error' => [
                     'code' => 123,
@@ -145,7 +145,7 @@ final class ClientTest extends TestCase
             ]))
         ;
 
-        $this->client->request($service->value, $method->value, 1, 2, 3);
+        $this->client->request($service, $method, 1, 2, 3);
     }
 
     /**
@@ -162,8 +162,8 @@ final class ClientTest extends TestCase
         $expectedUid = 1337;
         $expectedResult = 'foo';
 
-        $authenticationArguments = [OdooRpcService::Common->value, OdooRpcMethod::Login->value, [$database, $username, $password]];
-        $requestArguments = [OdooRpcService::Object->value, OdooRpcMethod::ExecuteKw->value, [
+        $authenticationArguments = [OdooRpcService::COMMON, OdooRpcMethod::LOGIN, [$database, $username, $password]];
+        $requestArguments = [OdooRpcService::OBJECT, OdooRpcMethod::EXECUTE_KW, [
             $database,
             $expectedUid,
             $password,
@@ -178,10 +178,12 @@ final class ClientTest extends TestCase
             ->method('request')
             ->withConsecutive($authenticationArguments, $requestArguments)
             ->willReturn(static::returnCallback(function ($service) use ($expectedUid) {
-                return match ($service) {
-                    OdooRpcService::Common->value => $expectedUid,
-                    default => 'foo'
-                };
+                switch ($service) {
+                    case OdooRpcService::COMMON:
+                        return $expectedUid;
+                    default:
+                        return 'foo';
+                }
             }))
         ;
 
@@ -199,7 +201,7 @@ final class ClientTest extends TestCase
         $this->transport
             ->expects(static::once())
             ->method('request')
-            ->with(OdooRpcService::Common->value, OdooRpcMethod::Version->value)
+            ->with(OdooRpcService::COMMON, OdooRpcMethod::VERSION)
             ->willReturn([
                 'server_version_info' => [13, 3, 7, 'a', 'b', 'c'],
                 'protocol_version' => 1,
@@ -226,7 +228,7 @@ final class ClientTest extends TestCase
         $this->transport
             ->expects(static::once())
             ->method('request')
-            ->with(OdooRpcService::Common->value, OdooRpcMethod::Login->value, [$database, $username, $password])
+            ->with(OdooRpcService::COMMON, OdooRpcMethod::LOGIN, [$database, $username, $password])
             ->willReturn($expectedUid)
         ;
 

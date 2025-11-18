@@ -11,9 +11,17 @@ declare(strict_types=1);
 
 namespace Ang3\Component\Odoo\Enum;
 
-enum OdooRpcService: string
+/**
+ * @author Joanis ROUANET <https://github.com/Ang3>
+ */
+final class OdooRpcService
 {
-    case Common = 'common';
-    case Object = 'object';
-    case Database = 'db';
+    public const COMMON = 'common';
+    public const OBJECT = 'object';
+    public const DATABASE = 'db';
+
+    private function __construct()
+    {
+        // Prevent instantiation
+    }
 }

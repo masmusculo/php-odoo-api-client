@@ -24,8 +24,9 @@ interface TransportInterface
     /**
      * Make a request to Odoo database.
      *
+     * @return mixed
      * @throws RequestException   on bad request
      * @throws TransportException on transport errors
      */
-    public function request(string $service, string $method, array $arguments = []): mixed;
+    public function request(string $service, string $method, array $arguments = []);
 }

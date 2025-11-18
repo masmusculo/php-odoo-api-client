@@ -13,15 +13,58 @@ namespace Ang3\Component\Odoo\Metadata;
 
 class Version
 {
+    /**
+     * @var int
+     */
+    private $majorVersion;
+
+    /**
+     * @var int
+     */
+    private $minorVersion;
+
+    /**
+     * @var int
+     */
+    private $patchVersion;
+
+    /**
+     * @var string
+     */
+    private $buildName;
+
+    /**
+     * @var string
+     */
+    private $buildIdentifier;
+
+    /**
+     * @var string
+     */
+    private $buildVersion;
+
+    /**
+     * @var int
+     */
+    private $protocolVersion;
+
     public function __construct(
-        private readonly int $majorVersion,
-        private readonly int $minorVersion,
-        private readonly int $patchVersion,
-        private readonly string $buildName,
-        private readonly string $buildIdentifier,
-        private readonly string $buildVersion,
-        private readonly int $protocolVersion
-    ) {}
+        int $majorVersion,
+        int $minorVersion,
+        int $patchVersion,
+        string $buildName,
+        string $buildIdentifier,
+        string $buildVersion,
+        int $protocolVersion
+    ) {
+        $this->majorVersion = $majorVersion;
+        $this->minorVersion = $minorVersion;
+        $this->patchVersion = $patchVersion;
+        $this->buildName = $buildName;
+        $this->buildIdentifier = $buildIdentifier;
+        $this->buildVersion = $buildVersion;
+        $this->protocolVersion = $protocolVersion;
+    }
 
     /**
      * Creates the instance from Odoo response payload.

@@ -15,13 +15,44 @@ use Ang3\Component\Odoo\Exception\ConnectionException;
 
 class Connection
 {
+    /**
+     * @var string
+     */
+    private $host;
+
+    /**
+     * @var string
+     */
+    private $username;
+
+    /**
+     * @var string
+     */
+    private $password;
+
+    /**
+     * @var string
+     */
+    private $database;
+
+    /**
+     * @var string
+     */
+    private $scheme;
+
     public function __construct(
-        private readonly string $host,
-        private readonly string $username,
-        private readonly string $password,
-        private readonly string $database,
-        private readonly string $scheme = 'https'
-    ) {}
+        string $host,
+        string $username,
+        string $password,
+        string $database,
+        string $scheme = 'https'
+    ) {
+        $this->host = $host;
+        $this->username = $username;
+        $this->password = $password;
+        $this->database = $database;
+        $this->scheme = $scheme;
+    }
 
     public function __toString(): string
     {
@@ -93,7 +124,7 @@ class Connection
             throw ConnectionException::invalidDsn($dsn, 'Missing path.');
         }
 
-        $database = str_starts_with($path, '/') ? substr($path, 1) : $path;
+        $database = substr($path, 0, 1) === '/' ? substr($path, 1) : $path;
 
         return new self($host, $user, urldecode($password), $database);
     }

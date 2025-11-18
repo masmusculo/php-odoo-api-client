@@ -27,8 +27,25 @@ use Psr\Log\LoggerInterface;
  */
 class Client
 {
-    private TransportInterface $transport;
-    private ?int $uid = null;
+    /**
+     * @var Connection
+     */
+    private $connection;
+
+    /**
+     * @var TransportInterface
+     */
+    private $transport;
+
+    /**
+     * @var LoggerInterface|null
+     */
+    private $logger;
+
+    /**
+     * @var int|null
+     */
+    private $uid = null;
 
     private static $domainRequiredMethods = [
         'search',
@@ -36,11 +53,13 @@ class Client
     ];
 
     public function __construct(
-        private readonly Connection $connection,
+        Connection $connection,
         TransportInterface $transport = null,
-        private ?LoggerInterface $logger = null
+        LoggerInterface $logger = null
     ) {
+        $this->connection = $connection;
         $this->transport = $transport ?: new JsonRpcPhpStreamTransport($this->connection);
+        $this->logger = $logger;
     }
 
     /**
@@ -70,15 +89,18 @@ class Client
     }
 
 
-    public function executeKw(string $name, string $method, array $parameters = [], array $options = []): mixed
+    /**
+     * @return mixed
+     */
+    public function executeKw(string $name, string $method, array $parameters = [], array $options = [])
     {
         if (in_array($method, self::$domainRequiredMethods, true) && empty($parameters)) {
             $parameters = [[]];
         }
 
         return $this->request(
-            OdooRpcService::Object->value,
-            OdooRpcMethod::ExecuteKw->value,
+            OdooRpcService::OBJECT,
+            OdooRpcMethod::EXECUTE_KW,
             $this->connection->getDatabase(),
             $this->authenticate(),
             $this->connection->getPassword(),
@@ -91,18 +113,18 @@ class Client
 
     public function version(): Version
     {
-        return Version::create((array) $this->request(OdooRpcService::Common->value, OdooRpcMethod::Version->value));
+        return Version::create((array) $this->request(OdooRpcService::COMMON, OdooRpcMethod::VERSION));
     }
 
     /**
      * List available databases on the server.
      * This method doesn't require authentication.
-     * 
+     *
      * @throws TransportException on transport errors
      */
     public function listDatabases(): array
     {
-        return (array) $this->request(OdooRpcService::Database->value, OdooRpcMethod::List->value);
+        return (array) $this->request(OdooRpcService::DATABASE, OdooRpcMethod::LIST);
     }
 
     /**
@@ -112,8 +134,8 @@ class Client
     {
         if (null === $this->uid) {
             $this->uid = (int) $this->request(
-                OdooRpcService::Common->value,
-                OdooRpcMethod::Login->value,
+                OdooRpcService::COMMON,
+                OdooRpcMethod::LOGIN,
                 $this->connection->getDatabase(),
                 $this->connection->getUsername(),
                 $this->connection->getPassword()
@@ -128,10 +150,12 @@ class Client
     }
 
     /**
+     * @param mixed ...$arguments
+     * @return mixed
      * @throws RequestException   on request errors
      * @throws TransportException on transport errors
      */
-    public function request(string $service, string $method, mixed ...$arguments): mixed
+    public function request(string $service, string $method, ...$arguments)
     {
         $context = [
             'service' => $service,
@@ -141,17 +165,21 @@ class Client
             'request_id' => uniqid('rpc', true),
         ];
 
-        $this->logger?->info('Odoo request #{request_id} - {service}::{method}({arguments}) (uid: #{uid})', $context);
+        if ($this->logger !== null) {
+            $this->logger->info('Odoo request #{request_id} - {service}::{method}({arguments}) (uid: #{uid})', $context);
+        }
 
         $runtime = microtime(true);
         $result = $this->transport->request($service, $method, $arguments);
         $runtime = microtime(true) - $runtime;
 
-        $this->logger?->debug('Odoo request #{request_id} finished - Runtime: {runtime}s.', [
-            'request_id' => $context['request_id'],
-            'runtime' => number_format($runtime, 3, '.', ' '),
-            'payload' => $result,
-        ]);
+        if ($this->logger !== null) {
+            $this->logger->debug('Odoo request #{request_id} finished - Runtime: {runtime}s.', [
+                'request_id' => $context['request_id'],
+                'runtime' => number_format($runtime, 3, '.', ' '),
+                'payload' => $result,
+            ]);
+        }
 
         return $result;
     }

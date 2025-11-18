@@ -16,7 +16,10 @@ use Faker\Generator;
 
 trait FakerTrait
 {
-    protected static Generator|null $faker = null;
+    /**
+     * @var Generator|null
+     */
+    protected static $faker = null;
 
     public static function faker(): Generator
     {

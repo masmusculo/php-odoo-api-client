@@ -26,12 +26,28 @@ class JsonRpcPhpStreamTransport implements TransportInterface
      */
     public const DEFAULT_ENDPOINT = '/jsonrpc';
 
-    public function __construct(
-        private readonly Connection $connection,
-        private readonly int $timeOut = TransportInterface::DEFAULT_TIMEOUT
-    ) {}
+    /**
+     * @var Connection
+     */
+    private $connection;
 
-    public function request(string $service, string $method, array $arguments = []): mixed
+    /**
+     * @var int
+     */
+    private $timeOut;
+
+    public function __construct(
+        Connection $connection,
+        int $timeOut = TransportInterface::DEFAULT_TIMEOUT
+    ) {
+        $this->connection = $connection;
+        $this->timeOut = $timeOut;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function request(string $service, string $method, array $arguments = [])
     {
         $payload = json_encode([
             'jsonrpc' => '2.0',
