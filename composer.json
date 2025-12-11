@@ -1,5 +1,5 @@
 {
-    "name": "ang3/php-odoo-api-client",
+    "name": "osunasport/php-odoo-api-client",
     "type": "component",
     "description": "Odoo API client",
     "keywords": ["odoo", "api", "client", "transport", "json"],
@@ -8,6 +8,9 @@
         {
             "name": "Joanis ROUANET",
             "homepage": "https://github.com/Ang3"
+        },
+        {
+            "name": "Osunasport",
         }
     ],
     "autoload": {
