@@ -31,14 +31,21 @@ final class JsonRpcPhpStreamTransportTest extends TestCase
     public const JSON_ERROR_ENDPOINT = '/json_error';
     public const REMOTE_ERROR_ENDPOINT = '/remote_error';
 
-    private JsonRpcPhpStreamTransport $transport;
-    private MockObject $connection;
+    /**
+     * @var JsonRpcPhpStreamTransport
+     */
+    private $transport;
+
+    /**
+     * @var MockObject
+     */
+    private $connection;
 
     protected function setUp(): void
     {
         parent::setUp();
         $this->connection = $this->createMock(Connection::class);
-        $this->transport = new JsonRpcPhpStreamTransport($this->connection, TransportInterface::DEFAULT_TIMEOUT, '');
+        $this->transport = new JsonRpcPhpStreamTransport($this->connection, TransportInterface::DEFAULT_TIMEOUT);
     }
 
     /**

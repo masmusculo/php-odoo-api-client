@@ -76,7 +76,7 @@ class Connection
             $getParam($config, 'username'),
             $getParam($config, 'password'),
             $getParam($config, 'database'),
-            $config['scheme'] ?? 'https',
+            $config['scheme'] ?? 'https'
         );
     }
 

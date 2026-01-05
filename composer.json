@@ -20,13 +20,13 @@
         }
     },
     "require": {
-        "php": ">=7.2.10",
+        "php": ">=7.1",
         "ext-json": "*",
         "psr/log": "^1.1|^2.0|^3.0"
     },
     "require-dev": {
         "symfony/test-pack": "^1.0",
-        "symfony/var-dumper": "^4.4|^5.4",
-        "fakerphp/faker": "^1.9"
+        "symfony/var-dumper": "^3.4|^4.4|^5.4",
+        "fakerphp/faker": "^1.8"
     }
 }

@@ -24,12 +24,35 @@ final class ConnectionTest extends TestCase
 {
     use FakerTrait;
 
-    private Connection $connection;
-    private string $host;
-    private string $username;
-    private string $password;
-    private string $database;
-    private string $dsn;
+    /**
+     * @var Connection
+     */
+    private $connection;
+
+    /**
+     * @var string
+     */
+    private $host;
+
+    /**
+     * @var string
+     */
+    private $username;
+
+    /**
+     * @var string
+     */
+    private $password;
+
+    /**
+     * @var string
+     */
+    private $database;
+
+    /**
+     * @var string
+     */
+    private $dsn;
 
     protected function setUp(): void
     {

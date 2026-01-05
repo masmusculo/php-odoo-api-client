@@ -30,10 +30,25 @@ use Psr\Log\LoggerInterface;
  */
 final class ClientTest extends TestCase
 {
-    private Client $client;
-    private MockObject $connection;
-    private MockObject $transport;
-    private MockObject $logger;
+    /**
+     * @var Client
+     */
+    private $client;
+
+    /**
+     * @var MockObject
+     */
+    private $connection;
+
+    /**
+     * @var MockObject
+     */
+    private $transport;
+
+    /**
+     * @var MockObject
+     */
+    private $logger;
 
     protected function setUp(): void
     {
