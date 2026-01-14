@@ -16,7 +16,7 @@ namespace Ang3\Component\Odoo\Exception;
  */
 class RemoteException extends RequestException
 {
-    protected array $remoteTrace = [];
+    protected $remoteTrace = [];
 
     public static function create(array $payload): self
     {
