@@ -70,6 +70,7 @@ class JsonRpcPhpStreamTransport implements TransportInterface
                 'timeout' => $this->timeOut,
                 'header' => 'Content-Type: application/json',
                 'content' => $payload,
+                'ignore_errors' => true,
             ],
         ]);
 
@@ -78,6 +79,24 @@ class JsonRpcPhpStreamTransport implements TransportInterface
 
         if (false === $response) {
             throw new TransportException('JSON RPC request failed - Unable to get stream contents.');
+        }
+
+        // Obtener código HTTP de la respuesta
+        $httpCode = 0;
+        if (isset($http_response_header) && !empty($http_response_header)) {
+            if (preg_match('/HTTP\/\d\.\d\s+(\d+)/', $http_response_header[0], $matches)) {
+                $httpCode = (int)$matches[1];
+            }
+        }
+
+        if ($httpCode >= 400) {
+            $errorMsg = sprintf(
+                'JSON RPC request failed - HTTP %d (URL: %s, Response: %s)',
+                $httpCode,
+                $endpointUrl,
+                substr($response, 0, 500)
+            );
+            throw new TransportException($errorMsg);
         }
 
         $data = (array) json_decode($response, true);
