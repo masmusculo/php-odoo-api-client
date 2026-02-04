@@ -68,13 +68,14 @@ class JsonRpcPhpStreamTransport implements TransportInterface
             'http' => [
                 'method' => 'POST',
                 'timeout' => $this->timeOut,
-                'header' => 'Content-Type: application/json',
+                'header' => "Content-Type: application/json\r\n" .
+                    "User-Agent: Osunasport/JsonRPC\r\n",
                 'content' => $payload,
                 'ignore_errors' => true,
             ],
         ]);
 
-        $endpointUrl = $this->connection->getUrl().self::DEFAULT_ENDPOINT;
+        $endpointUrl = $this->connection->getUrl() . self::DEFAULT_ENDPOINT;
         $response = file_get_contents($endpointUrl, false, $context);
 
         if (false === $response) {
