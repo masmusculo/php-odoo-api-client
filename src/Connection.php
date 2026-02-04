@@ -56,7 +56,7 @@ class Connection
 
     public function __toString(): string
     {
-        return sprintf('%s://%s:%s@%s/%s', $this->scheme, $this->username, urlencode($this->password), $this->host, $this->database);
+        return \sprintf('%s://%s:%s@%s/%s', $this->scheme, $this->username, urlencode($this->password), $this->host, $this->database);
     }
 
     public static function create(array $config): self
@@ -65,7 +65,7 @@ class Connection
             $value = $config[$paramName] ?? null;
 
             if (null === $value) {
-                throw new ConnectionException(sprintf('Missing configuration parameter "%s".', $paramName));
+                throw new ConnectionException(\sprintf('Missing configuration parameter "%s".', $paramName));
             }
 
             return $value;
@@ -105,7 +105,7 @@ class Connection
         }
 
         if (!\in_array($scheme, ['http', 'https'], true)) {
-            throw ConnectionException::invalidDsn($dsn, sprintf('The scheme "%s" is not supported (supported: "http" or "https").', $scheme));
+            throw ConnectionException::invalidDsn($dsn, \sprintf('The scheme "%s" is not supported (supported: "http" or "https").', $scheme));
         }
 
         if (!$host) {
@@ -124,7 +124,7 @@ class Connection
             throw ConnectionException::invalidDsn($dsn, 'Missing path.');
         }
 
-        $database = substr($path, 0, 1) === '/' ? substr($path, 1) : $path;
+        $database = '/' === substr($path, 0, 1) ? substr($path, 1) : $path;
 
         return new self($host, $user, urldecode($password), $database);
     }
@@ -134,7 +134,7 @@ class Connection
      */
     public function getIdentifier(): string
     {
-        return sha1(sprintf('%s.%s.%s', $this->host, $this->database, $this->username));
+        return sha1(\sprintf('%s.%s.%s', $this->host, $this->database, $this->username));
     }
 
     public function getHost(): string
@@ -164,6 +164,6 @@ class Connection
 
     public function getUrl(): string
     {
-        return sprintf('%s://%s', $this->scheme, $this->host);
+        return \sprintf('%s://%s', $this->scheme, $this->host);
     }
 }

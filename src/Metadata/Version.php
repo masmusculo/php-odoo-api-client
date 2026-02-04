@@ -83,7 +83,7 @@ class Version
 
     public function getName(): string
     {
-        return sprintf('%s.%s.%s+%s', $this->majorVersion, $this->minorVersion, $this->patchVersion, $this->buildVersion);
+        return \sprintf('%s.%s.%s+%s', $this->majorVersion, $this->minorVersion, $this->patchVersion, $this->buildVersion);
     }
 
     public function getMajorVersion(): int

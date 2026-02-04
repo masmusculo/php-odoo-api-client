@@ -24,7 +24,6 @@ interface TransportInterface
     /**
      * Make a request to Odoo database.
      *
-     * @return mixed
      * @throws RequestException   on bad request
      * @throws TransportException on transport errors
      */

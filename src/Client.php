@@ -45,7 +45,7 @@ class Client
     /**
      * @var int|null
      */
-    private $uid = null;
+    private $uid;
 
     private static $domainRequiredMethods = [
         'search',
@@ -54,8 +54,8 @@ class Client
 
     public function __construct(
         Connection $connection,
-        TransportInterface $transport = null,
-        LoggerInterface $logger = null
+        ?TransportInterface $transport = null,
+        ?LoggerInterface $logger = null
     ) {
         $this->connection = $connection;
         $this->transport = $transport ?: new JsonRpcPhpStreamTransport($this->connection);
@@ -70,7 +70,7 @@ class Client
      *
      * @throws ConnectionException on invalid DSN
      */
-    public static function create(string $dsn, TransportInterface $transport = null, LoggerInterface $logger = null): self
+    public static function create(string $dsn, ?TransportInterface $transport = null, ?LoggerInterface $logger = null): self
     {
         return new self(Connection::parseDsn($dsn), $transport, $logger);
     }
@@ -83,18 +83,14 @@ class Client
      *
      * @throws MissingConfigParameterException when a required parameter is missing
      */
-    public static function createFromConfig(array $config, TransportInterface $transport = null, LoggerInterface $logger = null): self
+    public static function createFromConfig(array $config, ?TransportInterface $transport = null, ?LoggerInterface $logger = null): self
     {
         return new self(Connection::create($config), $transport, $logger);
     }
 
-
-    /**
-     * @return mixed
-     */
     public function executeKw(string $name, string $method, array $parameters = [], array $options = [])
     {
-        if (in_array($method, self::$domainRequiredMethods, true) && empty($parameters)) {
+        if (\in_array($method, self::$domainRequiredMethods, true) && empty($parameters)) {
             $parameters = [[]];
         }
 
@@ -150,8 +146,6 @@ class Client
     }
 
     /**
-     * @param mixed ...$arguments
-     * @return mixed
      * @throws RequestException   on request errors
      * @throws TransportException on transport errors
      */
@@ -165,7 +159,7 @@ class Client
             'request_id' => uniqid('rpc', true),
         ];
 
-        if ($this->logger !== null) {
+        if (null !== $this->logger) {
             $this->logger->info('Odoo request #{request_id} - {service}::{method}({arguments}) (uid: #{uid})', $context);
         }
 
@@ -173,7 +167,7 @@ class Client
         $result = $this->transport->request($service, $method, $arguments);
         $runtime = microtime(true) - $runtime;
 
-        if ($this->logger !== null) {
+        if (null !== $this->logger) {
             $this->logger->debug('Odoo request #{request_id} finished - Runtime: {runtime}s.', [
                 'request_id' => $context['request_id'],
                 'runtime' => number_format($runtime, 3, '.', ' '),
