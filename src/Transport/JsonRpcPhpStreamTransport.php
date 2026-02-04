@@ -29,7 +29,8 @@ class JsonRpcPhpStreamTransport implements TransportInterface
     public function __construct(
         private readonly Connection $connection,
         private readonly int $timeOut = TransportInterface::DEFAULT_TIMEOUT
-    ) {}
+    ) {
+    }
 
     public function request(string $service, string $method, array $arguments = []): mixed
     {
@@ -45,14 +46,14 @@ class JsonRpcPhpStreamTransport implements TransportInterface
         ]);
 
         if (JSON_ERROR_NONE !== json_last_error()) {
-            throw new TransportException(sprintf('Failed to encode data to JSON: %s', json_last_error_msg()));
+            throw new TransportException(\sprintf('Failed to encode data to JSON: %s', json_last_error_msg()));
         }
 
         $context = stream_context_create([
             'http' => [
                 'method' => 'POST',
                 'timeout' => $this->timeOut,
-                'header' => "Content-Type: application/json\r\n" .
+                'header' => "Content-Type: application/json\r\n".
                     "User-Agent: Osunasport/JsonRPC\r\n",
                 'content' => $payload,
                 'ignore_errors' => true,
@@ -63,19 +64,19 @@ class JsonRpcPhpStreamTransport implements TransportInterface
         $response = file_get_contents($endpointUrl, false, $context);
 
         if (false === $response) {
-            throw new TransportException(sprintf('JSON RPC request failed - Unable to connect to %s', $endpointUrl));
+            throw new TransportException(\sprintf('JSON RPC request failed - Unable to connect to %s', $endpointUrl));
         }
 
         // Obtener código HTTP de la respuesta
         $httpCode = 0;
         if (isset($http_response_header) && !empty($http_response_header)) {
             if (preg_match('/HTTP\/\d\.\d\s+(\d+)/', $http_response_header[0], $matches)) {
-                $httpCode = (int)$matches[1];
+                $httpCode = (int) $matches[1];
             }
         }
 
         if ($httpCode >= 400) {
-            $errorMsg = sprintf(
+            $errorMsg = \sprintf(
                 'JSON RPC request failed - HTTP %d (URL: %s, Response: %s)',
                 $httpCode,
                 $endpointUrl,
@@ -87,7 +88,7 @@ class JsonRpcPhpStreamTransport implements TransportInterface
         $data = (array) json_decode($response, true);
 
         if (JSON_ERROR_NONE !== json_last_error()) {
-            throw new TransportException(sprintf('Failed to decode JSON data: %s', json_last_error_msg()));
+            throw new TransportException(\sprintf('Failed to decode JSON data: %s', json_last_error_msg()));
         }
 
         if (\is_array($data['error'] ?? null)) {

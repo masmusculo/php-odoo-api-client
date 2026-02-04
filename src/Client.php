@@ -37,7 +37,7 @@ class Client
 
     public function __construct(
         private readonly Connection $connection,
-        TransportInterface $transport = null,
+        ?TransportInterface $transport = null,
         private ?LoggerInterface $logger = null
     ) {
         $this->transport = $transport ?: new JsonRpcPhpStreamTransport($this->connection);
@@ -51,7 +51,7 @@ class Client
      *
      * @throws ConnectionException on invalid DSN
      */
-    public static function create(string $dsn, TransportInterface $transport = null, LoggerInterface $logger = null): self
+    public static function create(string $dsn, ?TransportInterface $transport = null, ?LoggerInterface $logger = null): self
     {
         return new self(Connection::parseDsn($dsn), $transport, $logger);
     }
@@ -64,15 +64,14 @@ class Client
      *
      * @throws MissingConfigParameterException when a required parameter is missing
      */
-    public static function createFromConfig(array $config, TransportInterface $transport = null, LoggerInterface $logger = null): self
+    public static function createFromConfig(array $config, ?TransportInterface $transport = null, ?LoggerInterface $logger = null): self
     {
         return new self(Connection::create($config), $transport, $logger);
     }
 
-
     public function executeKw(string $name, string $method, array $parameters = [], array $options = []): mixed
     {
-        if (in_array($method, self::$domainRequiredMethods, true) && empty($parameters)) {
+        if (\in_array($method, self::$domainRequiredMethods, true) && empty($parameters)) {
             $parameters = [[]];
         }
 
@@ -97,7 +96,7 @@ class Client
     /**
      * List available databases on the server.
      * This method doesn't require authentication.
-     * 
+     *
      * @throws TransportException on transport errors
      */
     public function listDatabases(): array
