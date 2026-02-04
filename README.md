@@ -74,7 +74,7 @@ If you need to use the version directly from the repository:
     "repositories": [
         {
             "type": "vcs",
-            "url": "https://github.com/YOUR_USERNAME/php-odoo-api-client"
+            "url": "https://github.com/masmusculo/php-odoo-api-client"
         }
     ],
     "require": {
@@ -82,8 +82,6 @@ If you need to use the version directly from the repository:
     }
 }
 ```
-
-> **Note:** Replace `YOUR_USERNAME` with the user/organization where your fork is hosted.
 
 ## 🚀 Basic Usage
 
