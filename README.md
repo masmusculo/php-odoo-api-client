@@ -212,8 +212,6 @@ try {
 }
 ```
 
-See the [06_consulta_carriers.php](examples/06_consulta_carriers.php) file for a complete example with HTML output.
-
 ## 🔍 Common Operations
 
 ### Searching Records
