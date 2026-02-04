@@ -13,7 +13,7 @@ The fork was created to complete the JSON-RPC implementation that was pending in
 ## ✨ Features
 
 - ✅ Complete Odoo API client via JSON-RPC
-- ✅ Compatible with PHP 7.4+ and PHP 8.0+
+- ✅ Compatible with PHP 7.1+ and PHP 8.0+
 - ✅ No dependency on PHP's `xmlrpc` extension
 - ✅ Support for all Odoo operations (CRUD, searches, etc.)
 - ✅ Automatic authentication
@@ -27,7 +27,7 @@ This project maintains two main branches:
 | Branch | PHP Version | Nomenclature | Example |
 |--------|-------------|--------------|---------|
 | `master` | PHP 8.0+ | `8.8.x.y` | `8.8.1.0` |
-| `master-php7` | PHP 7.4+ | `8.7.x.y` | `8.7.1.0` |
+| `master-php7` | PHP 7.1+ | `8.7.x.y` | `8.7.1.0` |
 
 ### Versioning System
 
@@ -36,7 +36,7 @@ Versioning follows the format `A.B.x.y`:
 - **A** (8): Inherited from the original official library
 - **B** (8 or 7): Indicates the supported PHP version
   - `8` = PHP 8.0+
-  - `7` = PHP 7.4+
+  - `7` = PHP 7.1+
 - **x.y**: Fork-specific versioning (major.minor)
 
 ## 🔌 Odoo Compatibility
@@ -59,7 +59,7 @@ Versioning follows the format `A.B.x.y`:
 composer require osunasport/php-odoo-api-client:8.8.*
 ```
 
-### For PHP 7.4+
+### For PHP 7.1+
 
 ```bash
 composer require osunasport/php-odoo-api-client:8.7.*
